@@ -41,7 +41,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.12.0/cmake-3.12.0
 
 # eosio
 RUN cd $eos_path &&\
-    wget https://github.com/EOSIO/eos/releases/download/v2.0.10/eosio_2.0.10-1-ubuntu-18.04_amd64.deb \
+    wget https://github.com/EOSIO/eos/releases/download/v2.0.10/eosio_2.0.10-1-ubuntu-18.04_amd64.deb &&\
     apt -y install ./eosio_2.0.10-1-ubuntu-18.04_amd64.deb &&\
     rm -r eosio_2.0.10-1-ubuntu-18.04_amd64.deb
 
@@ -73,8 +73,8 @@ EXPOSE 8080
 ENV PASSWORD=eospc
 
 RUN apt install curl &&\
-    wget https://github.com/cdr/code-server/releases/download/3.1.1/code-server-3.1.1-linux-x86_64.tar.gz && \
-    tar zxvf code-server-3.1.1-linux-x86_64.tar.gz && \
+    wget https://github.com/cdr/code-server/releases/download/3.1.1/code-server-3.1.1-linux-x86_64.tar.gz &&\
+    tar zxvf code-server-3.1.1-linux-x86_64.tar.gz &&\
     rm -r code-server-3.1.1-linux-x86_64.tar.gz
 
 #https://github.com/ml-tooling/ml-workspace/blob/develop/Dockerfile#L930
