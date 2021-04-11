@@ -8,6 +8,7 @@ RUN apt-get update && apt-get -y upgrade &&\
 
 COPY ./ /opt/application
 
+WORKDIR /opt/application/utils
 # Install EOSIO
 # Installed in /usr/opt/eosio
 RUN cd /opt/application/utils &&\
