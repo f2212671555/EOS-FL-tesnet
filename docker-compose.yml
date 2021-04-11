@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  eosio:
+    container_name: eosio
+    build:
+      context: ./services/eosio
+      dockerfile: Dockerfile
+    image: my/eosio
+    # command: nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::history_plugin --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --plugin eosio::http_plugin --http-server-address=0.0.0.0:8888 --access-control-allow-origin=* --contracts-console --http-validate-host=false --filter-on="*"
+    command: /bin/sh -c /opt/application/scripts/start.sh
+    stop_grace_period: 3m0s
+    volumes:
+      - eosio-data-volume:/root/data-dir
+      - ./services/eosio:/opt/application
+      - ./contracts:/opt/contracts
+    ports:
+      - '8888:8888'
+      - '9830:9876'
+    environment:
+      DATA_DIR: /root/data-dir
+      CONFIG_DIR: /opt/application/config
+      CONTRACTS_DIR: /opt/contracts
+      SYS_CONTRACTS_DIR: /opt/contracts
+      VIRTUAL_HOST: eosio.eoslocal.io
+      VIRTUAL_PORT: 8888
+    depends_on:
+      - keosd
+    networks:
+      default:
+        aliases:
+          - eosio.eoslocal.io
+  keosd:
+    container_name: keosd
+    hostname: keosd
+    build:
+      context: ./services/keosd
+      dockerfile: Dockerfile
+    image: my/keosd
+    command: keosd --wallet-dir /opt/eosio/bin/data-dir --http-server-address=0.0.0.0:8901 --http-alias=wallet.eoslocal:8901 --http-validate-host 0 --verbose-http-errors
+    volumes:
+      - keosd-data-volume:/opt/eosio/bin/data-dir
+    expose:
+      - 8901
+    ports:
+      - '8901:8901'
+    environment:
+      VIRTUAL_HOST: wallet.eoslocal.io
+      VIRTUAL_PORT: 8901
+    networks:
+      default:
+        aliases:
+          - wallet.eoslocal.io
+volumes:
+  eosio-data-volume:
+  keosd-data-volume:
+    external: true
+networks:
+  default:
+    name: eoslocal
