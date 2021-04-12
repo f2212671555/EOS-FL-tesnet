@@ -18,7 +18,13 @@ function unlock_wallet () {
 function create_wallet () {
   echo "Creating default wallet ..."
   WALLET_PASSWORD=$($cleos wallet create --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
-  echo $WALLET_PASSWORD > "$CONFIG_DIR"/keys/wallet_password.txt
+  if [ "$WALLET_PASSWORD" = "" ]
+  then
+    echo "create_wallet Fail"
+  else
+    echo "create_wallet Success"
+    echo $WALLET_PASSWORD > "$CONFIG_DIR"/keys/wallet_password.txt
+  fi
   sleep .5
 }
 
@@ -29,7 +35,7 @@ function import_private_key () {
 
 # Creates an eos account with 100 EOS
 function create_eos_account () {
-  # $cleos system newaccount eosio --transfer $1 $2 $2 --stake-net '1 EOS' --stake-cpu '1 EOS' --buy-ram '1 EOS'
+  # $cleos system newaccount eosio --transfer $1 $2 $2 --stake-net '1 SYS' --stake-cpu '1 EOS' --buy-ram '1 SYS'
   $cleos create account eosio $1 $2 $2
-  $cleos transfer eosio $1 '100 EOS' -p eosio
+  $cleos transfer eosio $1 '100 SYS' -p eosio
 }

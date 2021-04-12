@@ -15,13 +15,14 @@ services:
       - ./services/eosio:/opt/application
       - ./contracts:/opt/contracts
     ports:
+      - '8080:8080'
       - '8888:8888'
       - '9830:9876'
     environment:
       DATA_DIR: /root/data-dir
       CONFIG_DIR: /opt/application/config
       CONTRACTS_DIR: /opt/contracts
-      SYS_CONTRACTS_DIR: /opt/contracts
+      SYSTEM_CONTRACTS_DIR: /opt/system_contracts
       VIRTUAL_HOST: eosio.eoslocal.io
       VIRTUAL_PORT: 8888
     depends_on:
