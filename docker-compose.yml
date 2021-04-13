@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  eostutorial:
+    container_name: eostutorial
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: my/eostutorial
+    ports:
+      - '8080:8080'
+      - '8888:8888'
+      - '9830:9876'
+      - '8901:8901'
