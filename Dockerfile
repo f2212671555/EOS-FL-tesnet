@@ -8,23 +8,26 @@ RUN apt-get update && apt-get -y upgrade \
     && apt-get install -y python3-pip g++ psmisc openssl libssl-dev
 
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
-RUN apt install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
+RUN apt-get install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 
 RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.3/eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
-RUN apt install -y ./eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
+RUN apt-get install -y ./eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
 
 WORKDIR /opt
 RUN git clone https://github.com/EOSIO/eosio.contracts.git eosio.contracts-1.8.x \
     && cd ./eosio.contracts-1.8.x/ \
     && git checkout release/1.8.x \
-    && echo yes | ./build.sh \
-    && cd ./build/contracts/
+    && echo yes | ./build.sh
 
 ENV EOSIO_OLD_CONTRACTS_DIRECTORY /opt/eosio.contracts-1.8.x/build/contracts
 
-RUN git clone https://github.com/EOSIO/eosio.contracts.git \
+RUN apt-get remove eosio.cdt
+
+RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
+RUN apt-get install -y ./eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
+
+RUN git clone https://github.com/EOSIO/eosio.contracts.git --branch v1.9.0 eosio.contracts \
     && cd ./eosio.contracts/ \
-    && git checkout release/1.9.x \
     && echo yes | ./build.sh
 
 ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts
