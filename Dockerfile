@@ -26,8 +26,9 @@ RUN apt-get remove -y eosio.cdt
 RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
 
-RUN git clone https://github.com/EOSIO/eosio.contracts.git --branch v1.9.0 eosio.contracts \
+RUN git clone https://github.com/EOSIO/eosio.contracts.git \
     && cd ./eosio.contracts/ \
+    && git checkout release/1.9.x \
     && echo yes | ./build.sh
 
 ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts

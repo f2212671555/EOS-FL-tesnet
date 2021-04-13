@@ -8,7 +8,8 @@ services:
       dockerfile: Dockerfile
     image: my/eostutorial
     ports:
+      - '6666:6666'
+      - '8000:8000'
       - '8080:8080'
-      - '8888:8888'
-      - '9830:9876'
-      - '8901:8901'
+    expose:
+      - 6666
