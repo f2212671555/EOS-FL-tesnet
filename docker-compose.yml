@@ -16,3 +16,6 @@ services:
       - 6666
     volumes:
       - wallet-data-volume:/opt/eosio/bin/data-dir
+volumes:
+  wallet-data-volume:
+    external: true
