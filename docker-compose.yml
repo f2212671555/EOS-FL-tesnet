@@ -3,13 +3,14 @@ version: "3"
 services:
   eostutorial:
     container_name: eostutorial
-    build: 
-      context: .
+    build:
+      context: ./services/eosio
       dockerfile: Dockerfile
     image: my/eostutorial
     ports:
       - '6666:6666'
       - '8000:8000'
       - '8080:8080'
+      - '9000:9000'
     expose:
       - 6666

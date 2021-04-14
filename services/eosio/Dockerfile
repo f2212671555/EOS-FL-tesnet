@@ -35,6 +35,12 @@ ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts
 
 RUN git clone https://github.com/EOSIO/eos.git
 
+# will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
+ENV NODE_DIR /opt/nodes
+ENV GENESIS_DIR /opt/application/scripts
+ENV HTTP_SERVER_PORT 8000
+ENV FIRST_P2P_PORT 9000
+
 # coder-server
 EXPOSE 8080
 ENV PASSWORD eospc
@@ -52,5 +58,5 @@ RUN \
 RUN mkdir -p /root/.local/share/code-server/User &&\
     touch /root/.local/share/code-server/User/settings.json &&\
     echo '{"editor.fontSize": 18,"terminal.integrated.fontSize": 16,"terminal.integrated.shell.linux": "/bin/bash",}' >> /root/.local/share/code-server/User/settings.json
-# run code server   
+# run code server
 ENTRYPOINT ./code-server-3.1.1-linux-x86_64/code-server --host 0.0.0.0  >> codeserver.txt
