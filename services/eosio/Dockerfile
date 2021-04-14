@@ -7,6 +7,8 @@ RUN apt-get update && apt-get -y upgrade \
     && apt-get install -y wget nano jq curl git cmake build-essential \
     && apt-get install -y python3-pip g++ psmisc openssl libssl-dev
 
+COPY ./ /opt/application
+
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 
@@ -37,6 +39,8 @@ RUN git clone https://github.com/EOSIO/eos.git
 
 # will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
 ENV NODE_DIR /opt/nodes
+ENV WALLET_DIR /opt/eosio/bin/data-dir
+ENV CONFIG_DIR /opt/application/config
 ENV GENESIS_DIR /opt/application/scripts
 ENV HTTP_SERVER_PORT 8000
 ENV FIRST_P2P_PORT 9000

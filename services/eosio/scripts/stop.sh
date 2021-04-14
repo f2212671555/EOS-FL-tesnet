@@ -1,3 +1,3 @@
 #!/bin/bash
 
-# killall keosd nodeos
+killall keosd nodeos

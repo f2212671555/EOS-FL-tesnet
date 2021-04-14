@@ -29,7 +29,7 @@ function stepKillAll() {
 # Start keosd, create wallet, fill with keys
 function stepStartWallet() {
     # Start the default wallet
-    keosd --wallet-dir $WALLET_DIR --unlock-timeout 999999999 --http-server-address=0.0.0.0:6666 --http-validate-host 0 --verbose-http-errors
+    keosd --wallet-dir $WALLET_DIR --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 --http-validate-host 0 --verbose-http-errors
     sleep .5
     # create the default wallet
     create_wallet
