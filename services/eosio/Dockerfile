@@ -7,11 +7,13 @@ RUN apt-get update && apt-get -y upgrade \
     && apt-get install -y wget nano jq curl git cmake build-essential \
     && apt-get install -y python3-pip g++ psmisc openssl libssl-dev net-tools
 
-COPY ./ /opt/application
+COPY ./ /opt/application  
+
 
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 
+# eosio.cdt old version install
 RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.3/eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
 
@@ -21,8 +23,10 @@ RUN git clone https://github.com/EOSIO/eosio.contracts.git eosio.contracts-1.8.x
     && git checkout release/1.8.x \
     && echo yes | ./build.sh
 
+#set old version path
 ENV EOSIO_OLD_CONTRACTS_DIRECTORY /opt/eosio.contracts-1.8.x/build/contracts
 
+#eosio.cdt new version install & remove old version
 RUN apt-get remove -y eosio.cdt
 
 RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
@@ -33,12 +37,13 @@ RUN git clone https://github.com/EOSIO/eosio.contracts.git \
     && git checkout release/1.9.x \
     && echo yes | ./build.sh
 
+#set new version path
 ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts
 
+#test tutorial .py  (removable)
 RUN git clone https://github.com/EOSIO/eos.git
 
 # will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
-ENV NODE_DIR /opt/nodes
 ENV WALLET_DIR /opt/eosio/bin/data-dir
 ENV CONFIG_DIR /opt/application/config
 ENV GENESIS_DIR /opt/application/scripts

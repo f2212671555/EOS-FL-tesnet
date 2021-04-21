@@ -15,8 +15,9 @@ services:
     expose:
       - 6666
     volumes:
-      - ./services/eosio:/opt/application
+      - ./services/eosio:/opt/application   #container 內 mapping出來
       - wallet-data-volume:/opt/eosio/bin/data-dir
 volumes:
   wallet-data-volume:
     external: true
+    #設True代表wallet-data-volume要存在 or error
