@@ -8,13 +8,14 @@ services:
       dockerfile: Dockerfile
     image: my/eostutorial
     ports:
-      - '6666:6666'
-      - '8000:8000'
-      - '8080:8080'
-      - '9000:9000'
+      - '6666:6666' # keosd port
+      - '8000:8000' # HTTP SERVER PORT
+      - '8080:8080' # code server PORT
+      - '9000:9000' # FIRST P2P PORT
     expose:
       - 6666
     volumes:
+      - ./services/eosio:/opt/application
       - wallet-data-volume:/opt/eosio/bin/data-dir
 volumes:
   wallet-data-volume:

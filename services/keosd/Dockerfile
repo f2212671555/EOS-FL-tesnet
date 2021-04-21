@@ -12,38 +12,9 @@ COPY ./ /opt/application
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 
-RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.3/eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
-RUN apt-get install -y ./eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
-
-WORKDIR /opt
-RUN git clone https://github.com/EOSIO/eosio.contracts.git eosio.contracts-1.8.x \
-    && cd ./eosio.contracts-1.8.x/ \
-    && git checkout release/1.8.x \
-    && echo yes | ./build.sh
-
-ENV EOSIO_OLD_CONTRACTS_DIRECTORY /opt/eosio.contracts-1.8.x/build/contracts
-
-RUN apt-get remove -y eosio.cdt
-
-RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
-RUN apt-get install -y ./eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
-
-RUN git clone https://github.com/EOSIO/eosio.contracts.git \
-    && cd ./eosio.contracts/ \
-    && git checkout release/1.9.x \
-    && echo yes | ./build.sh
-
-ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts
-
-RUN git clone https://github.com/EOSIO/eos.git
-
 # will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
-ENV NODE_DIR /opt/nodes
+# ENV NODE_DIR /opt/nodes
 ENV WALLET_DIR /opt/eosio/bin/data-dir
-ENV CONFIG_DIR /opt/application/config
-ENV GENESIS_DIR /opt/application/scripts
-ENV HTTP_SERVER_PORT 8000
-ENV FIRST_P2P_PORT 9000
 
 # coder-server
 EXPOSE 8080

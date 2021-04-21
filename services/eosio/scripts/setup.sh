@@ -42,7 +42,7 @@ read -p "Press [Enter] to setup stepInitSystemContract..."
 echo
 stepInitSystemContract
 
-# stepCreateStakedAccounts
+stepCreateStakedAccounts
 # stepRegProducers
 echo
 read -p "Press [Enter] to setup stepStartProducers..."

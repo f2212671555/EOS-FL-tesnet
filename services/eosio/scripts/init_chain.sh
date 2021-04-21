@@ -29,7 +29,7 @@ function stepKillAll() {
 # Start keosd, create wallet, fill with keys
 function stepStartWallet() {
     # Start the default wallet
-    keosd --wallet-dir $WALLET_DIR --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 --http-validate-host 0 --verbose-http-errors
+    keosd --wallet-dir $WALLET_DIR --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 --http-validate-host 0 --verbose-http-errors &
     sleep .5
     # create the default wallet
     create_wallet
@@ -43,7 +43,7 @@ function stepStartBoot() {
     # $1 is node index, $2 is account name,
     # $3 is account pub key, $4 is account pvt key.
     # node index '0' for genesis
-    startNode 0 $gene_name $gene_pub $gene_pvt
+    start_node 0 $gene_name $gene_pub $gene_pvt
     sleep 1.5
 }
 
@@ -77,7 +77,7 @@ function stepSetSystemContract() {
     set +e;
         while [ "$result" -ne "0" ]; do
         echo "Activate PREACTIVATE_FEATURE..."
-        curl -X POST eosio:8888/v1/producer/schedule_protocol_feature_activations -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
+        curl -X POST 127.0.0.1:8000/v1/producer/schedule_protocol_feature_activations -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
         result=$?
         [[ "$result" -ne "0" ]] && echo "Failed, trying again";
         done
@@ -249,9 +249,16 @@ function stepInitSystemContract() {
 }
 
 # Create staked accounts
-# function stepCreateStakedAccounts() {
-
-# }
+function stepCreateStakedAccounts() {
+    # 2th to 4th is user nodes
+    for i in {2..4};
+    do
+        local name=$(jq ".[$i].name" $(dirname $0)/accounts.json)
+        local pub=$(jq ".[$i].pub" $(dirname $0)/accounts.json)
+        local pvt=$(jq ".[$i].pvt" $(dirname $0)/accounts.json)
+        start_node $i $name $pub $pvt
+    done
+}
 
 # Register producers
 # function stepRegProducers() {
@@ -260,6 +267,7 @@ function stepInitSystemContract() {
 
 # Start producers
 function stepStartProducers() {
+    # 1th is producers
     for i in {1..1};
     do
         local name=$(jq ".[$i].name" $(dirname $0)/accounts.json)
@@ -305,11 +313,11 @@ function stepStartProducers() {
 # }
 
 set_voters(){
-    # set 0th to 2th key="users" in account.json to be voters
-    for i in {0..2};
+    # set 2th to 4th key="users" in account.json to be voters
+    for i in {2..4;
     do
-        local name=$(jq -c ".users[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".users[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
         sleep 0.1
         $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
         sleep 0.1
@@ -320,11 +328,11 @@ set_voters(){
 }
 
 set_producers(){
-    # set 0th key="producers" in account.json to be producer
-    for i in {0..0};
+    # set 1th to "producers" in account.json to be producer
+    for i in {1..1};
     do
-        local name=$(jq -c ".producers[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".producers[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
         sleep 0.1
         $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
         sleep 0.1
@@ -336,11 +344,11 @@ set_producers(){
 }
 
 run_vote(){
-    # let 0th to 2th key="voters" in account.json which are setted as voters to vote
-    for i in {0..2};
+    # let 2th to 4th to "voters" in account.json which are setted as voters to vote
+    for i in {2..4};
     do
-        local name=$(jq -c ".producers[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".producers[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
         sleep 0.1
         $cleos system delegatebw ${name} ${name} "10000000.0000 $money_symbol" "10000000.0000 $money_symbol"
         sleep 0.1
