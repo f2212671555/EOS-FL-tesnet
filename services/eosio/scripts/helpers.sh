@@ -36,7 +36,7 @@ function create_wallet () {
   else
   WALLET_PASSWORD=$($cleos wallet create -n $1 --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
   fi
-  
+  sleep .5
   if [ "$WALLET_PASSWORD" = "" ]
   then
     echo "$1 create_wallet Fail"

@@ -6,46 +6,46 @@ echo
 echo "stepKillAll..."
 stepKillAll
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepStartWallet..."
 echo
 stepStartWallet
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepInitNodes..."
 echo
 stepInitNodes
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepStartBoot..."
 echo
 stepStartBoot
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup createSystemAccounts..."
 echo
 createSystemAccounts
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepInstallSystemContracts..."
 echo
 stepInstallSystemContracts
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepCreateTokens..."
 echo
 stepCreateTokens
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepSetSystemContract..."
 echo
 stepSetSystemContract
 echo
-
+sleep 1.5
 # read -p "Press [Enter] to setup stepInitSystemContract..."
 echo
 stepInitSystemContract
-
+sleep 1.5
 # stepCreateStakedAccounts
 # stepRegProducers
 echo
