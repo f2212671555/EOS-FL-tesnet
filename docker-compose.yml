@@ -15,6 +15,7 @@ services:
     expose:
       - 6666
     volumes:
+      - ./contracts:/opt/contracts   #container 內 mapping出來
       - ./services/eosio:/opt/application   #container 內 mapping出來
       - wallet-data-volume:/opt/eosio/bin/data-dir
 volumes:
