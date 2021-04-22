@@ -8,3 +8,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+### eosio config and logs ###
+services/eosio/config/*
+services/eosio/logs/*
