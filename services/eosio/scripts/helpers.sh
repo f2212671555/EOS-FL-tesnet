@@ -96,11 +96,12 @@ function import_private_key () {
 # ----------------------  key ---------------------- 
 
 # ----------------------  account ---------------------- 
-# Creates an eos account with 100 SYS
+# Creates an eos account with 100 OUO
 function create_eos_account () {
   $cleos system newaccount eosio --transfer $1 $2 $2 --stake-net '1000.000 OUO' --stake-cpu '100.000 OUO' --buy-ram '1000.000 OUO'
   # $cleos create account eosio $1 $2 $2
 }
+
 # ----------------------  account ---------------------
 
 # ----------------------  node ---------------------
@@ -201,12 +202,12 @@ function create_accounts(){
 # import genesis, producers and users private key
 function import_keys(){
     # import genesis(0th), producers(1th), users(2th-4th) private key
-    for i in {0..0};
+    for i in {0..4};
     do
         local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
         local pvt=$(jq -c ".[$i].pvt" $(dirname $0)/accounts.json | tr -d '"')
-        import_private_key $pvt $name
-        # import_private_key $pvt
+        # import_private_key $pvt $name
+        import_private_key $pvt
     done
 }
 

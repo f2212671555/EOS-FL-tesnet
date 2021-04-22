@@ -285,12 +285,12 @@ function stepInitSystemContract() {
     sleep 3
 }
 
-# Create staked accounts
+# # Create staked accounts
 # function stepCreateStakedAccounts() {
 
 # }
 
-# Register producers
+# # Register producers
 # function stepRegProducers() {
 
 # }
@@ -341,32 +341,60 @@ function stepStartProducers() {
 
 set_voters(){
     # set 2th to 4th key="users" in account.json to be voters
-    for i in {2..4;
+    for i in {2..4};
     do
         local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
         local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json | tr -d '"')
         sleep 0.1
-        $cleos system newaccount --stake-net "50.0000 OUO" --stake-cpu "50.0000 OUO" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
+        result=1
+        set +e;
+        while [ "$result" -ne "0" ]; do
+            echo "System New Account..."
+            $cleos system newaccount --stake-net "50.0000 OUO" --stake-cpu "50.0000 OUO" --buy-ram-kbytes 4096 eosio $name $pub -p eosio
+            result=$?
+            [[ "$result" -ne "0" ]] && echo "Failed, trying again";
+        done
+        set -e;
+        
         sleep 0.1
-        $cleos transfer eosio ${name} "21000000.0000 OUO" "Give you 21000000 OUO"
-        echo "Node $name set to voters"
+        $cleos transfer eosio $name "21000000.0000 OUO" "Give you 21000000 OUO"
+        echo "Node $i set to voters"
     done
 
 }
 
 set_producers(){
-    # set 1th to "producers" in account.json to be producer
+    # set 1th in account.json to "producers" 
     for i in {1..1};
     do
         local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
         local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json | tr -d '"')
+
+        result=1
+        set +e;
+        while [ "$result" -ne "0" ]; do
+            echo "System New Account..."
+            $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio $name $pub -p eosio
+            result=$?
+            [[ "$result" -ne "0" ]] && echo "Failed, trying again";
+        done
+        set -e;
+        
         sleep 0.1
-        $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
+        $cleos transfer eosio $name "100.0000 $money_symbol" "Give you 100 $money_symbol"
         sleep 0.1
-        $cleos transfer eosio ${name} "100.0000 $money_symbol" "Give you 100 $money_symbol"
-        sleep 0.1
-        $cleos system regproducer ${name} ${pub} http://localhost:`expr 9000 + $i`
-        echo "Node $name set to producers"
+
+        result=1
+        set +e;
+        while [ "$result" -ne "0" ]; do
+            echo "System Register Producer..."
+            $cleos system regproducer $name $pub http://127.0.0.1:`expr $FIRST_P2P_PORT + $i`
+            result=$?
+            [[ "$result" -ne "0" ]] && echo "Failed, trying again";
+        done
+        set -e;
+        
+        echo "Node $i set to producers"
     done
 }
 

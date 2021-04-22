@@ -6,53 +6,61 @@ echo
 echo "stepKillAll..."
 stepKillAll
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepStartWallet..."
+read -p "Press [Enter] to setup stepStartWallet..."
+
 echo
+echo "stepStartWallet..."
 stepStartWallet
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepInitNodes..."
-echo
+
+read -p "Press [Enter] to setup stepInitNodes..."
+echo "stepInitNodes..."
 stepInitNodes
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepStartBoot..."
-echo
+
+read -p "Press [Enter] to setup stepStartBoot..."
+echo "stepStartBoot..."
 stepStartBoot
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup createSystemAccounts..."
+
+read -p "Press [Enter] to setup createSystemAccounts..."
 echo
 createSystemAccounts
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepInstallSystemContracts..."
-echo
+
+read -p "Press [Enter] to setup stepInstallSystemContracts..."
+echo "stepInstallSystemContracts"
 stepInstallSystemContracts
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepCreateTokens..."
+
+read -p "Press [Enter] to setup stepCreateTokens..."
 echo
 stepCreateTokens
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepSetSystemContract..."
+
+read -p "Press [Enter] to setup stepSetSystemContract..."
 echo
 stepSetSystemContract
 echo
-sleep 1.5
-# read -p "Press [Enter] to setup stepInitSystemContract..."
+
+read -p "Press [Enter] to setup stepInitSystemContract..."
 echo
 stepInitSystemContract
-sleep 1.5
-# stepCreateStakedAccounts
-# stepRegProducers
 echo
 
-# read -p "Press [Enter] to setup stepStartProducers..."
+# stepCreateStakedAccounts
+# stepRegProducers
+
+read -p "Press [Enter] to setup stepStartProducers..."
 echo
 stepStartProducers
+echo
+
+read -p "Press [Enter] to setup set_producers..."
+set_producers
+
+read -p "Press [Enter] to setup set_voters..."
+set_voters
 
 # stepVote
 # claimRewards
