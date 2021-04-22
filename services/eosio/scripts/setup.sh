@@ -4,49 +4,53 @@ source $(dirname $0)/init_chain.sh
 
 echo
 echo "stepKillAll..."
-
 stepKillAll
 echo
-read -p "Press [Enter] to setup stepStartWallet..."
 
+# read -p "Press [Enter] to setup stepStartWallet..."
 echo
 stepStartWallet
 echo
-read -p "Press [Enter] to setup stepStartBoot..."
 
+# read -p "Press [Enter] to setup stepInitNodes..."
+echo
+stepInitNodes
+echo
+
+# read -p "Press [Enter] to setup stepStartBoot..."
 echo
 stepStartBoot
 echo
-read -p "Press [Enter] to setup createSystemAccounts..."
 
+# read -p "Press [Enter] to setup createSystemAccounts..."
 echo
 createSystemAccounts
 echo
-read -p "Press [Enter] to setup stepInstallSystemContracts..."
 
+# read -p "Press [Enter] to setup stepInstallSystemContracts..."
 echo
 stepInstallSystemContracts
 echo
-read -p "Press [Enter] to setup stepCreateTokens..."
 
+# read -p "Press [Enter] to setup stepCreateTokens..."
 echo
 stepCreateTokens
 echo
-read -p "Press [Enter] to setup stepSetSystemContract..."
 
+# read -p "Press [Enter] to setup stepSetSystemContract..."
 echo
 stepSetSystemContract
 echo
-read -p "Press [Enter] to setup stepInitSystemContract..."
 
+# read -p "Press [Enter] to setup stepInitSystemContract..."
 echo
 stepInitSystemContract
 
-stepCreateStakedAccounts
+# stepCreateStakedAccounts
 # stepRegProducers
 echo
-read -p "Press [Enter] to setup stepStartProducers..."
 
+# read -p "Press [Enter] to setup stepStartProducers..."
 echo
 stepStartProducers
 
@@ -60,13 +64,14 @@ stepStartProducers
 
 
 
-echo
-read -p "Press [Enter] to setup producers..."
+# echo
 
-echo
-set_producers
-read -p "Press [Enter] set voter..."
-set_voters
+# read -p "Press [Enter] to setup producers..."
+# echo
+# set_producers
+
+# read -p "Press [Enter] set voter..."
+# set_voters
 
 # echo
 # read -p "Press [Enter] to vote..."

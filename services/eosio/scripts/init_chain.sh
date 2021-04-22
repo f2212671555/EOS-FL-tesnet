@@ -8,42 +8,68 @@ source $(dirname $0)/helpers.sh
 MAX_CLIENTS=4
 
 # get genesis info. from accounts.json
-gene_name=$(jq -c '.[0].name' $(dirname $0)/accounts.json)
-gene_pub=$(jq -c '.[0].pub' $(dirname $0)/accounts.json)
-gene_pvt=$(jq -c '.[0].pvt' $(dirname $0)/accounts.json)
+gene_name=$(jq -c '.[0].name' $(dirname $0)/accounts.json | tr -d '"')
+gene_pub=$(jq -c '.[0].pub' $(dirname $0)/accounts.json | tr -d '"')
+gene_pvt=$(jq -c '.[0].pvt' $(dirname $0)/accounts.json | tr -d '"')
 
 # init eosio system accounts(eosio.*)
 system_accounts=('eosio.bpay' 'eosio.msig' 'eosio.names' 'eosio.ram' 'eosio.ramfee' 'eosio.saving' 'eosio.stake' 'eosio.token' 'eosio.vpay' 'eosio.rex')
 
 # init this chain money symbol
-money_symbol="OUO"
+money_symbol=OUO
 # init this chain give genesis node how much money when it is created
-genesis_money_system_give="10000000000.0000"
+# genesis_money_system_give=10000000000.0000
 
 # Kill all nodeos and keosd processes
 function stepKillAll() {
     killall keosd nodeos
+    # rm wallet private keys,nodes and mkdir keys,nodes
+    rm -rf $CONFIG_DIR
+    mkdir -p $CONFIG_DIR
+    mkdir -p $CONFIG_DIR/keys
+    mkdir -p $CONFIG_DIR/nodes
+    # rm wallet dir
+    rm -rf $WALLET_DIR
+    mkdir -p $WALLET_DIR
     sleep 1.5
 }
 
 # Start keosd, create wallet, fill with keys
 function stepStartWallet() {
-    # Start the default wallet
-    keosd --wallet-dir $WALLET_DIR --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 --http-validate-host 0 --verbose-http-errors &
-    sleep .5
+    # recreate log
+    rm -rf $LOGS_DIR/keosd.log
+    touch $LOGS_DIR/keosd.log
+    # Start the default wallet (background)
+    keosd --wallet-dir $WALLET_DIR \
+        --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 \
+        --http-validate-host 0 --verbose-http-errors >> $LOGS_DIR/keosd.log 2>&1 &
+    sleep 1.5
     # create the default wallet
-    create_wallet
-    # import private key to genesis
+    create_wallet eosio
+    # # create others wallet
+    # create_wallets
+    # import private key to genesis and other nodes
     import_keys
+}
+
+# init nodes(genesis and other nodes) config.ini and other files or folders
+# $1th node, $1 is node index
+function stepInitNodes() {
+    
+    for i in {0..1};
+    do
+        generate_nodes_config $i
+    done
+    sleep 1.5
 }
 
 # Start boot node(start genesis node)
 function stepStartBoot() {
     # run genesis node
-    # $1 is node index, $2 is account name,
-    # $3 is account pub key, $4 is account pvt key.
+    # $1 is node index
     # node index '0' for genesis
-    start_node 0 $gene_name $gene_pub $gene_pvt
+    # genesis initkey=0th in account.json pub key
+    start_node 0
     sleep 1.5
 }
 
@@ -52,7 +78,7 @@ function createSystemAccounts() {
     for i in ${!system_accounts[@]};
     do
         local system_account=${system_accounts[$i]}
-        echo $cleos create account eosio $system_account $gene_pub
+        $cleos create account eosio $system_account $gene_pub
     done
 }
 
@@ -63,10 +89,13 @@ function stepInstallSystemContracts() {
 }
 
 # Create tokens
+# hardcode
 function stepCreateTokens() {
     # init give genesis node money
-    $cleos push action eosio.token create "'[$gene_name, $genesis_money_system_give $money_symbol]'" -p eosio.token
-    $cleos push action eosio.token issue "'[$gene_name, $genesis_money_system_give $money_symbol, "initial supply"]'" -p eosio
+    # $cleos push action eosio.token create '['"$gene_name"', '"$genesis_money_system_give $money_symbol"']' -p eosio.token
+    # $cleos push action eosio.token issue '['"$gene_name, '"$genesis_money_system_give $money_symbol"', "initial supply"]' -p eosio
+    $cleos push action eosio.token create '[ "eosio", "10000000000.0000 OUO"]' -p eosio.token
+    $cleos push action eosio.token issue '[ "eosio", "10000000000.0000 OUO", "initial supply" ]' -p eosio
     sleep 1
 }
 
@@ -244,21 +273,22 @@ function stepSetSystemContract() {
 
 # Initialiaze system contract
 function stepInitSystemContract() {
-    $cleos push action eosio init '[0, "'4,${money_symbol}'"]' -p eosio@active
-    sleep 1
+    result=1
+    set +e;
+        while [ "$result" -ne "0" ]; do
+        echo "Initialiaze system contract...";
+        $cleos push action eosio init '[0, "4,OUO"]' -p eosio@active
+        result=$?
+        [[ "$result" -ne "0" ]] && echo "Failed, trying again";
+        done
+    set -e;
+    sleep 3
 }
 
 # Create staked accounts
-function stepCreateStakedAccounts() {
-    # 2th to 4th is user nodes
-    for i in {2..4};
-    do
-        local name=$(jq ".[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq ".[$i].pub" $(dirname $0)/accounts.json)
-        local pvt=$(jq ".[$i].pvt" $(dirname $0)/accounts.json)
-        start_node $i $name $pub $pvt
-    done
-}
+# function stepCreateStakedAccounts() {
+
+# }
 
 # Register producers
 # function stepRegProducers() {
@@ -270,10 +300,7 @@ function stepStartProducers() {
     # 1th is producers
     for i in {1..1};
     do
-        local name=$(jq ".[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq ".[$i].pub" $(dirname $0)/accounts.json)
-        local pvt=$(jq ".[$i].pvt" $(dirname $0)/accounts.json)
-        start_node $i $name $pub $pvt
+        start_node $i
     done
 }
 
@@ -316,12 +343,12 @@ set_voters(){
     # set 2th to 4th key="users" in account.json to be voters
     for i in {2..4;
     do
-        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json | tr -d '"')
         sleep 0.1
-        $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
+        $cleos system newaccount --stake-net "50.0000 OUO" --stake-cpu "50.0000 OUO" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
         sleep 0.1
-        $cleos transfer eosio ${name} "21000000.0000 $money_symbol" "Give you 21000000 $money_symbol"
+        $cleos transfer eosio ${name} "21000000.0000 OUO" "Give you 21000000 OUO"
         echo "Node $name set to voters"
     done
 
@@ -331,8 +358,8 @@ set_producers(){
     # set 1th to "producers" in account.json to be producer
     for i in {1..1};
     do
-        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json | tr -d '"')
         sleep 0.1
         $cleos system newaccount --stake-net "50.0000 $money_symbol" --stake-cpu "50.0000 $money_symbol" --buy-ram-kbytes 4096 eosio ${name} ${pub} -p eosio
         sleep 0.1
@@ -347,8 +374,8 @@ run_vote(){
     # let 2th to 4th to "voters" in account.json which are setted as voters to vote
     for i in {2..4};
     do
-        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json)
-        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json)
+        local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
+        local pub=$(jq -c ".[$i].pub" $(dirname $0)/accounts.json | tr -d '"')
         sleep 0.1
         $cleos system delegatebw ${name} ${name} "10000000.0000 $money_symbol" "10000000.0000 $money_symbol"
         sleep 0.1

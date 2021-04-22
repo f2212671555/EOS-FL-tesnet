@@ -46,6 +46,7 @@ RUN git clone https://github.com/EOSIO/eos.git
 # will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
 ENV WALLET_DIR /opt/eosio/bin/data-dir
 ENV CONFIG_DIR /opt/application/config
+ENV LOGS_DIR /opt/application/logs
 ENV GENESIS_DIR /opt/application/scripts
 ENV HTTP_SERVER_PORT 8000
 ENV FIRST_P2P_PORT 9000
