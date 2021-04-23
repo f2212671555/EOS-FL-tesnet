@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# cleos="cleos -u http://eosio:8000 --wallet-url http://keosd:6666"
-cleos="cleos -u http://127.0.0.1:8000 --wallet-url http://127.0.0.1:6666"
+cleos="cleos -u http://eosio:8000 --wallet-url http://keosd:6666"
+# cleos="cleos -u http://127.0.0.1:8000 --wallet-url http://127.0.0.1:6666"
 nodeos="nodeos -e -p eosio"
 
 # ----------------------  wallet ---------------------- 
@@ -54,28 +54,6 @@ function create_wallets () {
         local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
         create_wallet $name
     done
-}
-
-# Delete target wallet
-# $1 is index
-function delete_wallet () {
-  local name=$(jq -c ".[$i].name" $(dirname $0)/accounts.json | tr -d '"')
-  echo "Delete $1 wallet ..."
-  # delete wallet folder
-  rm -f $WALLET_DIR/$name.wallet
-  # delete wallet password
-  rm -f $CONFIG_DIR/keys/`$name`_wallet_password.txt
-  sleep .5
-}
-
-# Delete all wallets
-function delete_wallets () {
-  echo "Delete all wallet ..."
-  # delete wallet folder
-  rm -rf $WALLET_DIR
-  # delete wallet password
-  rm -f $CONFIG_DIR/keys/*.txt
-  sleep .5
 }
 
 # ----------------------  wallet ---------------------- 

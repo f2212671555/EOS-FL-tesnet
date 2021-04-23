@@ -20,7 +20,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -p https://github.com/zsh-users/zsh-autosuggestions \
     -p https://github.com/zsh-users/zsh-completions
 
-COPY ./ /opt/application  
+COPY ./ /opt/application
 
 
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
@@ -57,7 +57,6 @@ ENV EOSIO_CONTRACTS_DIRECTORY /opt/eosio.contracts/build/contracts
 RUN git clone https://github.com/EOSIO/eos.git
 
 # will be used in init_chain.sh or helpers.sh which is in /opt/application/scripts
-ENV WALLET_DIR /opt/eosio/bin/data-dir
 ENV CONFIG_DIR /opt/application/config
 ENV LOGS_DIR /opt/application/logs
 ENV GENESIS_DIR /opt/application/scripts

@@ -22,28 +22,32 @@ money_symbol=OUO
 
 # Kill all nodeos and keosd processes
 function stepKillAll() {
-    killall keosd nodeos
+    pkill nodeos
+    # killall keosd nodeos
     # rm wallet private keys,nodes and mkdir keys,nodes
     rm -rf $CONFIG_DIR
     mkdir -p $CONFIG_DIR
     mkdir -p $CONFIG_DIR/keys
     mkdir -p $CONFIG_DIR/nodes
-    # rm wallet dir
-    rm -rf $WALLET_DIR
-    mkdir -p $WALLET_DIR
+    # move to another docker container
+    # # rm wallet dir
+    # rm -rf $WALLET_DIR
+    # mkdir -p $WALLET_DIR
     sleep 1.5
 }
 
-# Start keosd, create wallet, fill with keys
+# create wallet, import keys
 function stepStartWallet() {
-    # recreate log
-    rm -rf $LOGS_DIR/keosd.log
-    touch $LOGS_DIR/keosd.log
-    # Start the default wallet (background)
-    keosd --wallet-dir $WALLET_DIR \
-        --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 \
-        --http-validate-host 0 --verbose-http-errors >> $LOGS_DIR/keosd.log 2>&1 &
-    sleep 1.5
+    # move to another docker container
+    # # recreate log
+    # rm -rf $LOGS_DIR/keosd.log
+    # touch $LOGS_DIR/keosd.log
+    # # Start the default wallet (background)
+    # keosd --wallet-dir $WALLET_DIR \
+    #     --unlock-timeout 999999999 --http-server-address=127.0.0.1:6666 \
+    #     --http-validate-host 0 --verbose-http-errors >> $LOGS_DIR/keosd.log 2>&1 &
+    # sleep 1.5
+    
     # create the default wallet
     create_wallet eosio
     # # create others wallet

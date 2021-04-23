@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-cleos="cleos -u http://127.0.0.1:8000 --wallet-url http://127.0.0.1:6666"
+cleos="cleos -u http://eosio:8000 --wallet-url http://keosd:6666"
+# cleos="cleos -u http://127.0.0.1:8000 --wallet-url http://127.0.0.1:6666"
 
 # compile custom contract
 # $1 is where custom contract is

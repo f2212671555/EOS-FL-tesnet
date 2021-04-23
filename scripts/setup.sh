@@ -8,4 +8,4 @@ echo "Building images"
 docker-compose build
 
 # echo "Initializing docker containers"
-docker-compose up -d eostutorial
+docker-compose up -d eos-fl-testnet
