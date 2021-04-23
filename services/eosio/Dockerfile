@@ -58,6 +58,7 @@ RUN git clone https://github.com/EOSIO/eos.git
 ENV CONFIG_DIR /opt/application/config
 ENV LOGS_DIR /opt/application/logs
 ENV GENESIS_DIR /opt/application/scripts
+ENV CONTRACTS_DIR /opt/application/contracts
 ENV HTTP_SERVER_PORT 8000
 ENV FIRST_P2P_PORT 9000
 

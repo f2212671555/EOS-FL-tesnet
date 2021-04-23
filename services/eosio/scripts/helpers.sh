@@ -34,7 +34,7 @@ function create_wallet () {
   then
     WALLET_PASSWORD=$($cleos wallet create --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
   else
-  WALLET_PASSWORD=$($cleos wallet create -n $1 --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
+    WALLET_PASSWORD=$($cleos wallet create -n $1 --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
   fi
   sleep .5
   if [ "$WALLET_PASSWORD" = "" ]
@@ -114,6 +114,8 @@ function generate_nodes_config () {
         echo "p2p-peer-address = localhost:$port" >> $dir/config.ini
     done
 
+    echo "http-validate-host = false" >> $dir/config.ini
+
     echo "max-irreversible-block-age = -1" >> $dir/config.ini
     echo "max-transaction-time = 1000" >> $dir/config.ini
     echo "contracts-console = true " >> $dir/config.ini
@@ -131,7 +133,7 @@ function generate_nodes_config () {
     echo "plugin = eosio::chain_plugin" >> $dir/config.ini
     echo "plugin = eosio::producer_api_plugin" >> $dir/config.ini
     echo "plugin = eosio::producer_plugin" >> $dir/config.ini
-
+    
     # give genesis node 2 plugins
     if (( $1==0 ));
     then

@@ -25,10 +25,10 @@ function stepKillAll() {
     pkill nodeos
     # killall keosd nodeos
     # rm wallet private keys,nodes and mkdir keys,nodes
-    rm -rf $CONFIG_DIR
-    mkdir -p $CONFIG_DIR
-    mkdir -p $CONFIG_DIR/keys
-    mkdir -p $CONFIG_DIR/nodes
+    # rm -rf $CONFIG_DIR
+    # mkdir -p $CONFIG_DIR
+    # mkdir -p $CONFIG_DIR/keys
+    # mkdir -p $CONFIG_DIR/nodes
     # move to another docker container
     # # rm wallet dir
     # rm -rf $WALLET_DIR

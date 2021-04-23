@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-# kill keosd and recreate wallet folder
+# kill keosd
 function stop_keosd() {
     pkill keosd
+}
+
+# recreate wallet folder
+function delete_wallet_dir() {
     rm -rf $WALLET_DIR
     mkdir -p $WALLET_DIR
 }
