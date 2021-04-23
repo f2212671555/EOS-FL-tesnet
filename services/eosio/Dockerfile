@@ -7,9 +7,6 @@ RUN apt-get update && apt-get -y upgrade \
     && apt-get install -y wget nano jq curl git cmake build-essential sudo \
     && apt-get install -y python3-pip g++ psmisc openssl libssl-dev net-tools vim
 
-RUN git clone git://github.com/wting/autojump.git\
-    cd autojump \
-    ./install.py or ./uninstall.py
 
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.1/zsh-in-docker.sh)" -- \
     -a 'POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history ram load time)' \
@@ -17,6 +14,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -p git \
     -p autojump \
     -p ssh-agent \
+    -p git clone git://github.com/wting/autojump.git \
     -p https://github.com/zsh-users/zsh-autosuggestions \
     -p https://github.com/zsh-users/zsh-completions
 
