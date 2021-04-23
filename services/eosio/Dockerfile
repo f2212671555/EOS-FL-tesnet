@@ -4,8 +4,21 @@ FROM ubuntu:18.04
 # jq for json
 # cmake for build eosio.cdt, build-essential for cmake
 RUN apt-get update && apt-get -y upgrade \
-    && apt-get install -y wget nano jq curl git cmake build-essential \
-    && apt-get install -y python3-pip g++ psmisc openssl libssl-dev net-tools
+    && apt-get install -y wget nano jq curl git cmake build-essential sudo \
+    && apt-get install -y python3-pip g++ psmisc openssl libssl-dev net-tools vim
+
+RUN git clone git://github.com/wting/autojump.git\
+    cd autojump \
+    ./install.py or ./uninstall.py
+
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.1/zsh-in-docker.sh)" -- \
+    -a 'POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history ram load time)' \
+    -a 'POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable vcs vi_mode)' \
+    -p git \
+    -p autojump \
+    -p ssh-agent \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -p https://github.com/zsh-users/zsh-completions
 
 COPY ./ /opt/application  
 
@@ -60,9 +73,9 @@ RUN wget https://github.com/cdr/code-server/releases/download/3.1.1/code-server-
     && rm -r code-server-3.1.1-linux-x86_64.tar.gz
 
 #https://github.com/ml-tooling/ml-workspace/blob/develop/Dockerfile#L930
-RUN \
+RUN chsh -s $(which zsh)
     # Make zsh the default shell
-    chsh -s $(which bash) root
+    #chsh -s $(which bash) root
 
 # setting code-server default to bash and resize font
 RUN mkdir -p /root/.local/share/code-server/User &&\
