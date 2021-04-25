@@ -28,7 +28,7 @@ function deploy_contract() {
     # set abi
     $cleos set abi $1 $CONTRACTS_DIR/$2/$3.abi -p $1@active
 }
-CONTRACTS_DIR=/opt/application/contracts
+# CONTRACTS_DIR=/opt/application/contracts
 # compile_contract todo todo
 # deploy_contract useraaaaaaaa todo todo
 # $cleos push action useraaaaaaaa create '["useraaaaaaaa", "Eat Dinner"]' -p useraaaaaaaa@active
