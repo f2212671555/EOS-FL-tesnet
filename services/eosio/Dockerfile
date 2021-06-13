@@ -18,8 +18,15 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -p https://github.com/zsh-users/zsh-autosuggestions \
     -p https://github.com/zsh-users/zsh-completions
 
+
+# eosio and client
 COPY ./ /opt/application
 
+# install client(model owner, trainer) python libs
+RUN cd /opt/application/client/modelOwner &&\
+    pip3 install -r requirements.txt
+RUN cd /opt/application/client/trainer &&\
+    pip3 install -r requirements.txt
 
 RUN wget https://github.com/eosio/eos/releases/download/v2.0.11/eosio_2.0.11-1-ubuntu-18.04_amd64.deb
 RUN apt-get install -y ./eosio_2.0.11-1-ubuntu-18.04_amd64.deb
@@ -63,7 +70,10 @@ ENV HTTP_SERVER_PORT 8000
 ENV FIRST_P2P_PORT 9000
 
 # coder-server
-EXPOSE 8080
+EXPOSE 3000
+# setting code-server browser port
+ENV PORT 3000
+# setting code-server browser PASSWORD
 ENV PASSWORD eospc
 
 RUN wget https://github.com/cdr/code-server/releases/download/3.1.1/code-server-3.1.1-linux-x86_64.tar.gz \

@@ -1,3 +1,7 @@
+### ipfs data ###
+/ipfs_data
+/export
+
 ### macOS ###
 .DS_Store
 
@@ -12,3 +16,6 @@
 ### eosio config and logs ###
 services/eosio/config/*
 services/eosio/logs/*
+
+### datasets ###
+services/eosio/client/*/data

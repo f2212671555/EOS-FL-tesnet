@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   eosio:
@@ -9,11 +9,11 @@ services:
     image: my/eosio
     ports:
       - '8000:8000' # HTTP SERVER PORT
-      - '8080:8080' # code server PORT
+      - '3000:3000' # code server PORT
       - '9000:9000' # FIRST P2P PORT
     volumes:
       - ./services/eosio:/opt/application   #container 內 mapping出來
-    depends_on: 
+    depends_on:
       - keosd
   keosd:
     container_name: keosd
@@ -28,7 +28,19 @@ services:
       - 6666
     ports:
       - '6666:6666' # keosd port
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: ipfs_host
+    volumes:
+      - ./export:/export
+      - ./ipfs_data:/data/ipfs
+    ports:
+      - '4001:4001'
+      - '4001:4001/udp'
+      - '127.0.0.1:8080:8080'
+      - '127.0.0.1:5001:5001' # webservice
 volumes:
   wallet-data-volume:
     external: true
     #設True代表wallet-data-volume要存在 or error
+    

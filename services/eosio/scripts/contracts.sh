@@ -28,10 +28,46 @@ function deploy_contract() {
     # set abi
     $cleos set abi $1 $CONTRACTS_DIR/$2/$3.abi -p $1@active
 }
-# CONTRACTS_DIR=/opt/application/contracts
-# compile_contract todo todo
-# deploy_contract useraaaaaaaa todo todo
-# $cleos push action useraaaaaaaa create '["useraaaaaaaa", "Eat Dinner"]' -p useraaaaaaaa@active
-# $cleos push action useraaaaaaaa update '[6, "Eating"]' -p useraaaaaaaa@active
-# $cleos push action useraaaaaaaa remove '[0]' -p useraaaaaaaa@active
-# $cleos get table useraaaaaaaa useraaaaaaaa tasks
+
+
+name=$(jq -c ".[0].name" $(dirname $0)/contract_accounts.json | tr -d '"')
+pub=$(jq -c ".[0].pub" $(dirname $0)/contract_accounts.json | tr -d '"')
+pvt=$(jq -c ".[0].pvt" $(dirname $0)/contract_accounts.json | tr -d '"')
+contract_account=$name
+
+function create_contract_account() {
+
+    result=1
+    set +e;
+    while [ "$result" -ne "0" ]; do
+        echo "System New Account..."
+        $cleos system newaccount --stake-net "50.0000 OUO" --stake-cpu "50.0000 OUO" --buy-ram-kbytes 4096 eosio $name $pub -p eosio
+        result=$?
+        [[ "$result" -ne "0" ]] && echo "Failed, trying again";
+    done
+
+    $cleos wallet import --private-key $pvt
+    set -e;
+
+    # $cleos wallet keys
+    
+}
+
+
+# create_contract_account
+
+compile_contract model model
+deploy_contract $contract_account model model
+
+
+#----test
+
+# $cleos push action $contract_account enroll '["useraaaaaaaa", 3, "Eat Dinner OAO"]' -p useraaaaaaaa@active
+$cleos push action $contract_account update '[1, "DOINGGG"]' -p useraaaaaaaa@active
+# $cleos push action $contract_account upload '["producer111a", 1, "DOING"]' -p producer111a@active
+# $cleos push action $contract_account record '["useraaaaaaaa", 1, 1, "DOING", "50"]' -p useraaaaaaaa@active
+# $cleos push action $contract_account remove '[1]' -p useraaaaaaaa@active
+
+# account -> The account who owns the table where the smart contract was deployed
+# scope -> The scope within the contract in which the table is found
+$cleos get table $contract_account $contract_account tasks
