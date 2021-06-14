@@ -57,14 +57,14 @@ def test(model, device, test_loader):
   return params
 
 if __name__ == "__main__" :
-  train_set = torchvision.datasets.MNIST(root="./data",train=True,transform=transforms.ToTensor(),download=True)
-  test_set = torchvision.datasets.MNIST(root="./data",train=False,transform=transforms.ToTensor(),download=True)
+  train_set = torchvision.datasets.MNIST(root="../data",train=True,transform=transforms.ToTensor(),download=True)
+  test_set = torchvision.datasets.MNIST(root="../data",train=False,transform=transforms.ToTensor(),download=True)
   # 60000/3
   train_ds_size = int(len(train_set)/3)
   alice_train_ds, bob_train_ds, carol_train_ds = torch.utils.data.random_split(train_set, [train_ds_size, train_ds_size, train_ds_size])
 
-  alice_train_loader = torch.utils.data.DataLoader(alice_train_ds, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS,shuffle=True)
-  # bob_train_loader = torch.utils.data.DataLoader(bob_train_ds, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS,shuffle=True)
+  # alice_train_loader = torch.utils.data.DataLoader(alice_train_ds, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS,shuffle=True)
+  bob_train_loader = torch.utils.data.DataLoader(bob_train_ds, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS,shuffle=True)
   # carol_train_loader = torch.utils.data.DataLoader(carol_train_ds, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS,shuffle=True)
 
   # 10000
@@ -72,8 +72,8 @@ if __name__ == "__main__" :
   model = m.load_model(sys.argv[1])
   
   # local train
-  para_A=trainNormal(alice_train_loader, test_loader, model)
-  # para_B=trainNormal(bob_train_loader,test_loader)
+  # para_A=trainNormal(alice_train_loader, test_loader, model)
+  para_B=trainNormal(bob_train_loader,test_loader)
   # para_C=trainNormal(carol_train_loader,test_loader)
   # print(para_A)
-  torch.save(para_A,'paramsA.pth')
+  torch.save(para_B,'paramsA.pth')

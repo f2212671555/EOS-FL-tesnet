@@ -54,7 +54,7 @@ function create_contract_account() {
 }
 
 
-# create_contract_account
+create_contract_account
 
 compile_contract model model
 deploy_contract $contract_account model model
@@ -63,7 +63,7 @@ deploy_contract $contract_account model model
 #----test
 
 # $cleos push action $contract_account enroll '["useraaaaaaaa", 3, "Eat Dinner OAO"]' -p useraaaaaaaa@active
-$cleos push action $contract_account update '[1, "DOINGGG"]' -p useraaaaaaaa@active
+# $cleos push action $contract_account update '[1, "DOINGGG"]' -p useraaaaaaaa@active
 # $cleos push action $contract_account upload '["producer111a", 1, "DOING"]' -p producer111a@active
 # $cleos push action $contract_account record '["useraaaaaaaa", 1, 1, "DOING", "50"]' -p useraaaaaaaa@active
 # $cleos push action $contract_account remove '[1]' -p useraaaaaaaa@active

@@ -32,5 +32,5 @@ def load_model(hash):
 
 def upload_params_to_ipfs():
   client = ipfshttpclient.connect('/dns/ipfs/tcp/5001/http')
-  hash = client.add('paramsA.pth')['Hash']
+  hash = client.add('params.pth')['Hash']
   print(hash)

@@ -5,10 +5,10 @@ from torchsummary import summary
 import ipfshttpclient # pip3 install ipfshttpclient==0.8.0a2
 
 class NeuralNet(nn.Module):
-  def __init__(self, input_num, hidden_num, output_num):
+  def __init__(self):
     super(NeuralNet, self).__init__()
-    self.fc1 = nn.Linear(input_num, hidden_num)
-    self.fc2 = nn.Linear(hidden_num, output_num)
+    self.fc1 = nn.Linear(784, 12)
+    self.fc2 = nn.Linear(12, 10)
     nn.init.normal_(self.fc1.weight)
     nn.init.normal_(self.fc2.weight)
     nn.init.constant_(self.fc1.bias, val=0)  # init bias = 0
@@ -22,10 +22,10 @@ class NeuralNet(nn.Module):
     return y
 
 class FLNeuralNet(nn.Module):
-  def __init__(self, input_num, hidden_num, output_num,com_para_fc1,com_para_fc2):
+  def __init__(self, com_para_fc1,com_para_fc2):
     super(FLNeuralNet, self).__init__()
-    self.fc1 = nn.Linear(input_num, hidden_num)
-    self.fc2 = nn.Linear(hidden_num, output_num)
+    self.fc1 = nn.Linear(784, 12)
+    self.fc2 = nn.Linear(12, 10)
     self.fc1.weight=Parameter(com_para_fc1)
     self.fc2.weight=Parameter(com_para_fc2)
     nn.init.constant_(self.fc1.bias, val=0)
@@ -38,12 +38,8 @@ class FLNeuralNet(nn.Module):
     y = self.fc2(x)
     return y
 
-INPUT_NUM = 784
-HIDDEN_NUM = 12
-OUTPUT_NUM = 10
-
 def save_model():
-  model = NeuralNet(INPUT_NUM, HIDDEN_NUM, OUTPUT_NUM)
+  model = NeuralNet()
   torch.save(model.state_dict(), 'model.pth')
   summary(model, (28*28,))
 
@@ -52,3 +48,7 @@ def upload_model_to_ipfs():
   hash = client.add('model.pth')['Hash']
   print(hash)
   # return hash
+
+def load_model_param_from_ipfs(hash):
+  client = ipfshttpclient.connect('/dns/ipfs/tcp/5001/http')
+  client.get(hash)
